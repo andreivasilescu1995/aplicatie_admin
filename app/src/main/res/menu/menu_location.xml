@@ -1,0 +1,26 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="aplicatie.admin.device_options_activity.DeviceOptionsActivity">
+
+    <item
+        android:id="@+id/action_maps_normal"
+        android:orderInCategory="100"
+        android:title="@string/action_maps_normal"
+        android:checkable="true"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_maps_satellite"
+        android:orderInCategory="100"
+        android:title="@string/action_maps_satellite"
+        android:checkable="true"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_maps_terrain"
+        android:orderInCategory="100"
+        android:title="@string/action_maps_terrain"
+        android:checkable="true"
+        app:showAsAction="never" />
+</menu>

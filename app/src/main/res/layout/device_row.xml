@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/label_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_id"
+            android:textSize="16sp"/>
+        <TextView
+            android:id="@+id/value_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/label_id"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/label_ip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/label_id"
+            android:text="@string/label_ip"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/value_ip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/label_ip"
+            android:layout_below="@+id/value_id"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/label_route"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/label_ip"
+            android:text="@string/label_route"
+            android:textSize="16sp"/>
+        <TextView
+            android:id="@+id/value_route"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/label_route"
+            android:layout_below="@+id/value_ip"
+            android:textSize="16sp"/>
+
+        <ImageButton
+            android:id="@+id/device_options"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="10dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_device_options"
+            android:contentDescription="device_settings"/>
+    </RelativeLayout>
+</LinearLayout>

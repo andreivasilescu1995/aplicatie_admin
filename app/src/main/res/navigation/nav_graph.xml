@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/fragment_devices">
+
+    <fragment
+        android:id="@+id/fragment_devices"
+        android:name="main_activity.DevicesFragment"
+        android:label="DevicesListFragment"
+        tools:layout="@layout/fragment_devices">
+        <action
+            android:id="@+id/action_fragment_devices_to_blankFragment"
+            app:destination="@id/blankFragment" />
+        <action
+            android:id="@+id/action_fragment_devices_to_deviceOptionsActivity"
+            app:destination="@id/deviceOptionsActivity" />
+    </fragment>
+
+    <fragment
+        app:popUpTo="@id/nav_graph"
+        android:id="@+id/blankFragment"
+        android:name="aplicatie.admin.SettingsFragment"
+        android:label="fragment_blank"
+        tools:layout="@layout/fragment_blank" />
+    <activity
+        android:id="@+id/deviceOptionsActivity"
+        android:name="device_options_activity.DeviceOptionsActivity"
+        android:label="activity_device_options"
+        tools:layout="@layout/activity_device_options" />
+
+</navigation>
