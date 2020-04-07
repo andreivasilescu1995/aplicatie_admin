@@ -19,8 +19,12 @@ import aplicatie.admin.R;
 
 class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceAdapterViewHolder> {
     private final String TAG = DeviceAdapter.class.getName();
-    private ArrayList<Device> devices;
+    private ArrayList<Device> devices = new ArrayList<>();
     private Context context;
+
+    public DeviceAdapter() {
+
+    }
 
     public DeviceAdapter(Context context, ArrayList<Device> devices) {
         this.context = context;
@@ -68,6 +72,14 @@ class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceAdapterView
             value_route = itemView.findViewById(R.id.value_route);
             device_options = itemView.findViewById(R.id.device_options);
         }
+    }
+
+    public void setDevices(ArrayList<Device> devices) {
+        this.devices = devices;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
     }
 }
 

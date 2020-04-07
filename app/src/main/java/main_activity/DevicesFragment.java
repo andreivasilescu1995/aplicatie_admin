@@ -16,12 +16,15 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
@@ -31,6 +34,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import aplicatie.admin.R;
+import device_options_activity.DeviceOptionsFragment;
+import device_options_activity.LocationFragment;
 import misc_objects.CallbackResponse;
 import misc_objects.Device;
 import misc_objects.JsonRequest;
@@ -45,9 +50,9 @@ public class DevicesFragment extends Fragment {
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeContainer;
     private Toolbar toolbar;
+    private JsonRequest jr;
+    private ArrayList<Device> devices;
     private DeviceAdapter adapter;
-    private JsonRequest jr = new JsonRequest();
-    private ArrayList<Device> devices = new ArrayList<>();
 
     private String mParam1;
     private String mParam2;
@@ -70,18 +75,19 @@ public class DevicesFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        jr = new JsonRequest();
+        devices = new ArrayList<>();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_devices, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        initToolbar();
+        initToolbar();
         initSwipeContainer();
         initRecyclerView();
         getDevicesFromServer();
@@ -91,41 +97,37 @@ public class DevicesFragment extends Fragment {
         recyclerView = getActivity().findViewById(R.id.device_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
+        adapter = new DeviceAdapter(getContext(), devices);
+        recyclerView.setAdapter(adapter);
     }
 
-//    private void initToolbar() {
-//        toolbar = getActivity().findViewById(R.id.toolbar);
-//        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(MenuItem item) {
-//                if (item.getItemId() == R.id.action_settings) {
-//                    NavHostFragment.findNavController(DevicesFragment.this).navigate(R.id.action_fragment_devices_to_blankFragment);
-//                }
-//                return true;
-//            }
-//        });
-//    }
+    private void initToolbar() {
+        toolbar = getActivity().findViewById(R.id.toolbar_main);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (item.getItemId() == R.id.action_about) {
+                    NavHostFragment.findNavController(DevicesFragment.this).navigate(R.id.action_fragment_devices_to_blankFragment);
+                }
+                return true;
+            }
+        });
+    }
 
     private void initSwipeContainer() {
         swipeContainer = getActivity().findViewById(R.id.refresh_devices);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                devices.removeAll(devices);
+                devices.clear();
                 getDevicesFromServer();
-                adapter.notifyDataSetChanged();
                 swipeContainer.setRefreshing(false);
             }
         });
     }
 
-    private void displayDevices() {
-        adapter = new DeviceAdapter(getContext(), devices);
-        recyclerView.setAdapter(adapter);
-    }
-
     private void getDevicesFromServer() {
-        RequestQueueSingleton.getInstance(getContext()).addToRequestQueue(jr.send_request(null, "http://192.168.0.108/get_online_devices", new CallbackResponse() {
+        JsonObjectRequest request = jr.send_request(null, LoginFragment.server_ip + "/get_online_devices", new CallbackResponse() {
             @Override
             public void handleResponse(Object response) {
                 JSONObject jo = (JSONObject) response;
@@ -137,14 +139,21 @@ public class DevicesFragment extends Fragment {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                displayDevices();
+                updateDevicesList();
             }
             @Override
             public void handleError(VolleyError error) {
                 String message = StaticMethods.volleyError(error);
                 Log.e(TAG, message);
                 Snackbar.make(getView(), StaticMethods.volleyError(error), Snackbar.LENGTH_SHORT).show();
+                updateDevicesList();
             }
-        }));
+        });
+        request.setRetryPolicy(new DefaultRetryPolicy(1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        RequestQueueSingleton.getInstance(getContext()).addToRequestQueue(request);
+    }
+
+    private void updateDevicesList() {
+        adapter.notifyDataSetChanged();
     }
 }

@@ -171,7 +171,8 @@ public class DeviceOptionsFragment extends Fragment {
                             public void handleError(VolleyError error) {
                                 String message = StaticMethods.volleyError(error);
                                 Log.e(TAG, message);
-                                Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
+                                if (getView() != null)
+                                    Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
                             }
                         }));
 
