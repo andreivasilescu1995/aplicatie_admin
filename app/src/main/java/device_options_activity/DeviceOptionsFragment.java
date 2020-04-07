@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.android.volley.VolleyError;
 import com.google.android.gms.maps.model.LatLng;
@@ -27,6 +28,7 @@ import org.json.JSONObject;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import aplicatie.admin.ErrorFragment;
 import misc_objects.CallbackResponse;
 import misc_objects.JsonRequest;
 import aplicatie.admin.R;
@@ -169,11 +171,15 @@ public class DeviceOptionsFragment extends Fragment {
 
                             @Override
                             public void handleError(VolleyError error) {
+                                flag_status = false;
                                 String message = StaticMethods.volleyError(error);
                                 Log.e(TAG, message);
                                 if (getView() != null)
                                     Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
-                                flag_status = false;
+
+                                FragmentManager fm = getActivity().getSupportFragmentManager();
+                                ErrorFragment errorFragment = ErrorFragment.newInstance(message, "");
+                                errorFragment.show(fm, "fragment_error");
                             }
                         }));
                         Log.d(TAG, "UPDATEZ STATUS");

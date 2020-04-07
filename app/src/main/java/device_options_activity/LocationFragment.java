@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.android.volley.VolleyError;
 import com.google.android.gms.maps.CameraUpdate;
@@ -22,17 +23,20 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONObject;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
+import aplicatie.admin.ErrorFragment;
 import misc_objects.CallbackResponse;
 import misc_objects.Device;
 import misc_objects.JsonRequest;
 import aplicatie.admin.R;
 import misc_objects.RequestQueueSingleton;
+import misc_objects.StaticMethods;
 
 public class LocationFragment extends Fragment implements OnMapReadyCallback {
     private static final String ARG_PARAM1 = "param1";
@@ -123,8 +127,15 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
 
                             @Override
                             public void handleError(VolleyError error) {
+                                String message = StaticMethods.volleyError(error);
                                 flag_locatie = false;
                                 Log.d(TAG, error.toString());
+                                if (getView() != null)
+                                    Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
+
+                                FragmentManager fm = getActivity().getSupportFragmentManager();
+                                ErrorFragment errorFragment = ErrorFragment.newInstance(message, "");
+                                errorFragment.show(fm, "fragment_error");
                             }
                         }));
                         Log.d(TAG, "UPDATEZ LOCATIE");
