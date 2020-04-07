@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.util.Log;
@@ -27,6 +28,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import aplicatie.admin.ErrorFragment;
 import aplicatie.admin.R;
 import misc_objects.CallbackResponse;
 import misc_objects.JsonRequest;
@@ -105,7 +107,13 @@ public class LoginFragment extends Fragment {
                     @Override
                     public void handleError(VolleyError error) {
                         String message = StaticMethods.volleyError(error);
-                        Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
+                        Log.d(TAG, message);
+                        if (getView() != null)
+                            Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
+
+                        FragmentManager fm = getActivity().getSupportFragmentManager();
+                        ErrorFragment errorFragment = ErrorFragment.newInstance(message, "");
+                        errorFragment.show(fm, "fragment_error");
                     }
                 });
                 request.setRetryPolicy(new DefaultRetryPolicy(1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));

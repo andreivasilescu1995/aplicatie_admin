@@ -35,7 +35,7 @@
     <fragment
         app:popUpTo="@id/nav_graph"
         android:id="@+id/blankFragment"
-        android:name="aplicatie.admin.SettingsFragment"
+        android:name="aplicatie.admin.ErrorFragment"
         android:label="fragment_blank"
         tools:layout="@layout/fragment_blank" />
     <activity

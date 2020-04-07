@@ -2,14 +2,14 @@ package main_activity;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentManager;
 
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-
-import com.google.android.material.snackbar.Snackbar;
 
 import aplicatie.admin.R;
 
@@ -28,6 +28,19 @@ public class MainActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_about:
+                FragmentManager fm = getSupportFragmentManager();
+                AboutFragment aboutFragment = AboutFragment.newInstance();
+                aboutFragment.show(fm, "fragment_about");
+                break;
+            default: break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

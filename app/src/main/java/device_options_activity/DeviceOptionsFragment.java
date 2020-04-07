@@ -173,9 +173,9 @@ public class DeviceOptionsFragment extends Fragment {
                                 Log.e(TAG, message);
                                 if (getView() != null)
                                     Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
+                                flag_status = false;
                             }
                         }));
-
                         Log.d(TAG, "UPDATEZ STATUS");
                     }
             }

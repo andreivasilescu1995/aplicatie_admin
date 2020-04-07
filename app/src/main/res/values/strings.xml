@@ -7,6 +7,10 @@
     <string name="label_server_ip">Server IP</string>
 
     <string name="action_about">About</string>
+    <string name="about_link"><a href='https://github.com/andreivasilescu1995/aplicatie_admin/tree/Android/app/src/main/java'>Github source</a></string>
+    <string name="about_sign">"@Vasilescu Andrei"</string>
+
+    <string name="title_error">Error</string>
 
     <string name="action_maps_normal">Normal map</string>
     <string name="action_maps_satellite">Satellite map</string>

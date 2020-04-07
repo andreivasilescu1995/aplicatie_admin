@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -33,6 +34,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import aplicatie.admin.ErrorFragment;
 import aplicatie.admin.R;
 import device_options_activity.DeviceOptionsFragment;
 import device_options_activity.LocationFragment;
@@ -87,7 +89,6 @@ public class DevicesFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initToolbar();
         initSwipeContainer();
         initRecyclerView();
         getDevicesFromServer();
@@ -99,19 +100,6 @@ public class DevicesFragment extends Fragment {
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
         adapter = new DeviceAdapter(getContext(), devices);
         recyclerView.setAdapter(adapter);
-    }
-
-    private void initToolbar() {
-        toolbar = getActivity().findViewById(R.id.toolbar_main);
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                if (item.getItemId() == R.id.action_about) {
-                    NavHostFragment.findNavController(DevicesFragment.this).navigate(R.id.action_fragment_devices_to_blankFragment);
-                }
-                return true;
-            }
-        });
     }
 
     private void initSwipeContainer() {
@@ -147,9 +135,13 @@ public class DevicesFragment extends Fragment {
                 Log.e(TAG, message);
                 Snackbar.make(getView(), StaticMethods.volleyError(error), Snackbar.LENGTH_SHORT).show();
                 updateDevicesList();
+
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                ErrorFragment errorFragment = ErrorFragment.newInstance(message, "");
+                errorFragment.show(fm, "fragment_error");
             }
         });
-        request.setRetryPolicy(new DefaultRetryPolicy(1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        request.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         RequestQueueSingleton.getInstance(getContext()).addToRequestQueue(request);
     }
 

@@ -95,8 +95,6 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
         final Device d = DeviceOptionsActivity.getSelectedDevice();
         final JsonRequest jr = new JsonRequest();
 
-
-
         new Timer().scheduleAtFixedRate(new TimerTask() {
             LatLng position;
             MarkerOptions markerOpt;
@@ -125,6 +123,7 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
 
                             @Override
                             public void handleError(VolleyError error) {
+                                flag_locatie = false;
                                 Log.d(TAG, error.toString());
                             }
                         }));
