@@ -93,7 +93,6 @@ public class LoginFragment extends Fragment {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onClick(View v) {
-                JsonRequest jr = new JsonRequest();
                 JSONObject jo = new JSONObject();
                 try {
                     jo.put("username", username.getText());
@@ -101,7 +100,7 @@ public class LoginFragment extends Fragment {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                com.android.volley.toolbox.JsonRequest request = jr.send_request(jo, LoginFragment.server_ip + "/login", new CallbackResponse() {
+                com.android.volley.toolbox.JsonRequest request = JsonRequest.send_request(jo, LoginFragment.server_ip + "/login", new CallbackResponse() {
                     @Override
                     public void handleResponse(Object response) {
                         NavHostFragment.findNavController(LoginFragment.this).navigate(R.id.action_loginFragment_to_fragment_devices);

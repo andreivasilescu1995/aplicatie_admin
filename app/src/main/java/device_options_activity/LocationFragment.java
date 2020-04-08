@@ -30,6 +30,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONObject;
 
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -48,7 +49,6 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
 
     private String mParam1;
     private String mParam2;
-    public static boolean flag_locatie = false;
 
     private final String TAG = LocationFragment.class.getName();
     private MapView mapView;
@@ -56,6 +56,7 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
     private MenuItem map_normal;
     private MenuItem map_satellite;
     private MenuItem map_terrain;
+    public static Timer timer_location;
 
     public LocationFragment() { }
 
@@ -92,78 +93,81 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        flag_locatie = true;
     }
 
     @Override
     public void onMapReady(final GoogleMap googleMap) {
+        final Device d = DeviceOptionsActivity.getSelectedDevice();
+
         map = googleMap;
         map_normal.setChecked(true);
 
-        final Device d = DeviceOptionsActivity.getSelectedDevice();
-
-        new Timer().scheduleAtFixedRate(new TimerTask() {
+        timer_location = new Timer("location_timer");
+        timer_location.schedule(new TimerTask() {
             LatLng position = null;
             Marker marker = null;
 
             @Override
             public void run() {
-                    if (flag_locatie) {
-                        JsonObjectRequest request = JsonRequest.send_request(null, "http://" + d.getIp() + "/location", new CallbackResponse() {
-                            @Override
-                            public void handleResponse(Object response) {
-                                map_normal.setChecked(true);
+                JsonObjectRequest request = JsonRequest.send_request(null, "http://" + d.getIp() + "/location", new CallbackResponse() {
+                    @Override
+                    public void handleResponse(Object response) {
+                        map_normal.setChecked(true);
 
-                                JSONObject jo = (JSONObject) response;
-                                position = new LatLng(jo.optDouble("latitude"), jo.optDouble("longitude"));
-                                if (marker == null) {
-                                    marker = map.addMarker(new MarkerOptions().position(position));
-                                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(position, 16);
-                                    map.animateCamera(cameraUpdate);
-                                } else {
-                                    marker.setPosition(position);
-                                    //CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(position, 16);
-                                    //map.animateCamera(cameraUpdate);
-                                }
-                            }
-
-                            @Override
-                            public void handleError(VolleyError error) {
-                                String message = StaticMethods.volleyError(error);
-                                flag_locatie = false;
-                                Log.d(TAG, error.toString());
-                                if (getView() != null)
-                                    Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
-
-                                try {
-                                    StaticMethods.getErrorFragment("Eroare localizare device", message).show(getActivity().getSupportFragmentManager(), "fragment_error");
-                                } catch (NullPointerException ex) {
-                                    Log.e(TAG, ex.getMessage());
-                                    ex.printStackTrace();
-                                }
-                            }
-                        });
-                        request.setTag("LocationFragment");
-                        request.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-                        RequestQueueSingleton.getInstance(getContext()).addToRequestQueue(request);
-                        Log.d(TAG, "UPDATEZ LOCATIE");
+                        JSONObject jo = (JSONObject) response;
+                        position = new LatLng(jo.optDouble("latitude"), jo.optDouble("longitude"));
+                        if (marker == null) {
+                            marker = map.addMarker(new MarkerOptions().position(position));
+                            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(position, 16);
+                            map.animateCamera(cameraUpdate);
+                        } else {
+                            marker.setPosition(position);
+                            //CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(position, 16);
+                            //map.animateCamera(cameraUpdate);
+                        }
                     }
+
+                    @Override
+                    public void handleError(VolleyError error) {
+                        timer_location.cancel();
+                        String message = StaticMethods.volleyError(error);
+                        Log.d(TAG, error.toString());
+                        if (getView() != null)
+                            Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
+
+                        try {
+                            StaticMethods.getErrorFragment("Eroare localizare device", message).show(getActivity().getSupportFragmentManager(), "fragment_error");
+                        } catch (NullPointerException ex) {
+                            Log.e(TAG, ex.getMessage());
+                            ex.printStackTrace();
+                        }
+                    }
+                });
+                request.setTag("LocationFragment");
+                request.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                RequestQueueSingleton.getInstance(getContext()).addToRequestQueue(request);
+                Log.d(TAG, "UPDATEZ LOCATIE");
             }
-        }, 1000, 3000);
+        }, 500, 5000);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mapView.onDestroy();
+        timer_location.cancel();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         mapView.onResume();
-        flag_locatie = true;
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mapView.onDestroy();
-        flag_locatie = false;
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
     }
 
     @Override

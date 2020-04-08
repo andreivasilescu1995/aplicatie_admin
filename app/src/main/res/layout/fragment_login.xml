@@ -24,7 +24,8 @@
         app:layout_constraintStart_toEndOf="@+id/label_username"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.402"
-        android:gravity="center_horizontal" />
+        android:gravity="center_horizontal"
+        android:autofillHints="" />
 
     <Button
         android:id="@+id/btn_login"

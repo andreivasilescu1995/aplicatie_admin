@@ -45,9 +45,7 @@ public class DeviceOptionsFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     private final String TAG = DeviceOptionsFragment.class.getName();
-    private FragmentManager fragmentManager;
-    private TextView tv_status_value;
-    public static boolean flag_status = false;
+    public static Timer timer_status;
 
     private String mParam1;
     private String mParam2;
@@ -80,13 +78,13 @@ public class DeviceOptionsFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        fragmentManager = getActivity().getSupportFragmentManager();
+
+        TextView tv_status_value;
 
         tv_status_value = getActivity().findViewById(R.id.tv_status_value);
         Button btn_start = view.findViewById(R.id.btn_start);
         Button btn_stop = view.findViewById(R.id.btn_stop);
 
-        flag_status = true;
         status();
 
         btn_start.setOnClickListener(new View.OnClickListener() {
@@ -107,13 +105,12 @@ public class DeviceOptionsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        flag_status = true;
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        flag_status = false;
+    public void onDestroyView() {
+        super.onDestroyView();
+        timer_status.cancel();
     }
 
     private void start() {
@@ -169,47 +166,46 @@ public class DeviceOptionsFragment extends Fragment {
     }
 
     private void status() {
-        new Timer().scheduleAtFixedRate(new TimerTask() {
+        timer_status = new Timer("status_timer");
+        timer_status.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                    if (flag_status) {
-                        JsonObjectRequest request = JsonRequest.send_request(null, "http://" + DeviceOptionsActivity.getSelectedDevice().getIp() + "/status", new CallbackResponse() {
-                            @Override
-                            public void handleResponse(Object response) {
-                                JSONObject jo = (JSONObject) response;
-                                if (jo.optString("status").equals("on")) {
-                                    set_status(true);
-                                } else {
-                                    set_status(false);
-                                }
-                            }
-                            @Override
-                            public void handleError(VolleyError error) {
-                                flag_status = false;
-                                String message = StaticMethods.volleyError(error);
-                                Log.e(TAG, message);
-                                if (getView() != null && this != null)
-                                    Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
-
-                                try {
-                                    StaticMethods.getErrorFragment("Eroare preluare status", message).show(getActivity().getSupportFragmentManager(), "fragment_error");
-                                } catch (NullPointerException ex) {
-                                    Log.e(TAG, ex.getMessage());
-                                    ex.printStackTrace();
-                                }
-                            }
-                        });
-                        request.setTag("DeviceOptionsFragment");
-                        request.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-                        RequestQueueSingleton.getInstance(getContext()).addToRequestQueue(request);
-                        Log.d(TAG, "UPDATEZ STATUS");
+                JsonObjectRequest request = JsonRequest.send_request(null, "http://" + DeviceOptionsActivity.getSelectedDevice().getIp() + "/status", new CallbackResponse() {
+                    @Override
+                    public void handleResponse(Object response) {
+                        JSONObject jo = (JSONObject) response;
+                        if (jo.optString("status").equals("on")) {
+                            set_status(true);
+                        } else {
+                            set_status(false);
+                        }
                     }
-            }
+                    @Override
+                    public void handleError(VolleyError error) {
+                        timer_status.cancel();
+                        String message = StaticMethods.volleyError(error);
+                        Log.e(TAG, message);
+                        if (getView() != null && this != null)
+                            Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
 
-        }, 1000, 5000);
+                        try {
+                            StaticMethods.getErrorFragment("Eroare preluare status", message).show(getActivity().getSupportFragmentManager(), "fragment_error");
+                        } catch (NullPointerException ex) {
+                            Log.e(TAG, ex.getMessage());
+                            ex.printStackTrace();
+                        }
+                    }
+                });
+                request.setTag("DeviceOptionsFragment");
+                request.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                RequestQueueSingleton.getInstance(getContext()).addToRequestQueue(request);
+                Log.d(TAG, "UPDATEZ STATUS");
+            }
+        }, 750, 10000);
     }
 
     private void set_status(boolean on) {
+        TextView tv_status_value = getActivity().findViewById(R.id.tv_status_value);
         if (on) {
             tv_status_value.setText(R.string.status_on);
             tv_status_value.setTextColor(Color.GREEN);

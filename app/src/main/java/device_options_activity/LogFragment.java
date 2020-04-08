@@ -83,7 +83,7 @@ public class LogFragment extends Fragment {
         });
     }
 
-    private void getDeviceLog() {
+    private synchronized void getDeviceLog() {
         final TextView log = getActivity().findViewById(R.id.tv_log);
         JsonObjectRequest request = JsonRequest.send_request(null, "http://" + DeviceOptionsActivity.getSelectedDevice().getIp() + "/log", new CallbackResponse() {
             @Override
