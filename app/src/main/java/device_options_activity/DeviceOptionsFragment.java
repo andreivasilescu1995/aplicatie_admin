@@ -79,9 +79,6 @@ public class DeviceOptionsFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        TextView tv_status_value;
-
-        tv_status_value = getActivity().findViewById(R.id.tv_status_value);
         Button btn_start = view.findViewById(R.id.btn_start);
         Button btn_stop = view.findViewById(R.id.btn_stop);
 
@@ -118,6 +115,7 @@ public class DeviceOptionsFragment extends Fragment {
             @Override
             public void handleResponse(Object response) {
                 Toast.makeText(getContext(), "Succes", Toast.LENGTH_SHORT).show();
+                set_status(true);
             }
             @Override
             public void handleError(VolleyError error) {
@@ -144,6 +142,7 @@ public class DeviceOptionsFragment extends Fragment {
             @Override
             public void handleResponse(Object response) {
                 Toast.makeText(getContext(), "Succes", Toast.LENGTH_SHORT).show();
+                set_status(false);
             }
             @Override
             public void handleError(VolleyError error) {
