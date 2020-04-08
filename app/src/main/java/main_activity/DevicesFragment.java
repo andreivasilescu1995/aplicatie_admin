@@ -52,8 +52,7 @@ public class DevicesFragment extends Fragment {
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeContainer;
     private Toolbar toolbar;
-    private JsonRequest jr;
-    private ArrayList<Device> devices;
+    private ArrayList<Device> devices = new ArrayList<>();;
     private DeviceAdapter adapter;
 
     private String mParam1;
@@ -77,8 +76,6 @@ public class DevicesFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        jr = new JsonRequest();
-        devices = new ArrayList<>();
     }
 
     @Override
@@ -115,7 +112,7 @@ public class DevicesFragment extends Fragment {
     }
 
     private void getDevicesFromServer() {
-        JsonObjectRequest request = jr.send_request(null, LoginFragment.server_ip + "/get_online_devices", new CallbackResponse() {
+        JsonObjectRequest request = JsonRequest.send_request(null, LoginFragment.server_ip + "/get_online_devices", new CallbackResponse() {
             @Override
             public void handleResponse(Object response) {
                 JSONObject jo = (JSONObject) response;
@@ -133,14 +130,19 @@ public class DevicesFragment extends Fragment {
             public void handleError(VolleyError error) {
                 String message = StaticMethods.volleyError(error);
                 Log.e(TAG, message);
-                Snackbar.make(getView(), StaticMethods.volleyError(error), Snackbar.LENGTH_SHORT).show();
+                if (getView() != null)
+                    Snackbar.make(getView(), StaticMethods.volleyError(error), Snackbar.LENGTH_SHORT).show();
                 updateDevicesList();
 
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                ErrorFragment errorFragment = ErrorFragment.newInstance(message, "");
-                errorFragment.show(fm, "fragment_error");
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                if (fragmentManager != null) {
+                    ErrorFragment errorFragment = ErrorFragment.newInstance("Erare preluare device-uri", message);
+                    errorFragment.show(fragmentManager, "fragment_error");
+                }
             }
         });
+        request.setTag("DevicesFragment");
+        request.setTag("DevicesFragment");
         request.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         RequestQueueSingleton.getInstance(getContext()).addToRequestQueue(request);
     }

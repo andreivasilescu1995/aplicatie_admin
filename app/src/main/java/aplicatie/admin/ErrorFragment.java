@@ -49,8 +49,10 @@ public class ErrorFragment extends DialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        TextView error_title = view.findViewById(R.id.title_error);
         TextView error_body = view.findViewById(R.id.tv_error);
-        error_body.setText(mParam1);
+        error_title.setText(mParam1);
+        error_body.setText(mParam2);
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 }

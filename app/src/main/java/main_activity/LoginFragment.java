@@ -73,6 +73,7 @@ public class LoginFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         final TextView username = getActivity().findViewById(R.id.textbox_username);
         final TextView password = getActivity().findViewById(R.id.textbox_password);
         final TextView server_ip = getActivity().findViewById(R.id.tv_server_ip);
@@ -111,9 +112,11 @@ public class LoginFragment extends Fragment {
                         if (getView() != null)
                             Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
 
-                        FragmentManager fm = getActivity().getSupportFragmentManager();
-                        ErrorFragment errorFragment = ErrorFragment.newInstance(message, "");
-                        errorFragment.show(fm, "fragment_error");
+                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                        if (fragmentManager != null) {
+                            ErrorFragment errorFragment = ErrorFragment.newInstance("Eroare login", message);
+                            errorFragment.show(fragmentManager, "fragment_error");
+                        }
                     }
                 });
                 request.setRetryPolicy(new DefaultRetryPolicy(1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));

@@ -10,11 +10,7 @@ import org.json.JSONObject;
 public class JsonRequest {
     private final String TAG = JsonRequest.class.getName();
 
-    public JsonRequest() {
-
-    }
-
-    public JsonObjectRequest send_request(JSONObject js_obj, String url, final CallbackResponse cb) {
+    public static JsonObjectRequest send_request(JSONObject js_obj, String url, final CallbackResponse cb) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, js_obj,
                 new Response.Listener<JSONObject>() {
                     @Override

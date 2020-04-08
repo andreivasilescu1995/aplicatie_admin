@@ -14,7 +14,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -31,6 +33,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import aplicatie.admin.ErrorFragment;
+import main_activity.MainActivity;
 import misc_objects.CallbackResponse;
 import misc_objects.Device;
 import misc_objects.JsonRequest;
@@ -97,17 +100,15 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
         map_normal.setChecked(true);
 
         final Device d = DeviceOptionsActivity.getSelectedDevice();
-        final JsonRequest jr = new JsonRequest();
 
         new Timer().scheduleAtFixedRate(new TimerTask() {
-            LatLng position;
-            MarkerOptions markerOpt;
+            LatLng position = null;
             Marker marker = null;
 
             @Override
             public void run() {
                     if (flag_locatie) {
-                        RequestQueueSingleton.getInstance(getContext()).addToRequestQueue(jr.send_request(null, "http://" + d.getIp() + "/location", new CallbackResponse() {
+                        JsonObjectRequest request = JsonRequest.send_request(null, "http://" + d.getIp() + "/location", new CallbackResponse() {
                             @Override
                             public void handleResponse(Object response) {
                                 map_normal.setChecked(true);
@@ -133,11 +134,16 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
                                 if (getView() != null)
                                     Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
 
-                                FragmentManager fm = getActivity().getSupportFragmentManager();
-                                ErrorFragment errorFragment = ErrorFragment.newInstance(message, "");
-                                errorFragment.show(fm, "fragment_error");
+                                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                                if (fragmentManager != null) {
+                                    ErrorFragment errorFragment = ErrorFragment.newInstance("Eroare preluare locatie device", message);
+                                    errorFragment.show(fragmentManager, "fragment_error");
+                                }
                             }
-                        }));
+                        });
+                        request.setTag("LocationFragment");
+                        request.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                        RequestQueueSingleton.getInstance(getContext()).addToRequestQueue(request);
                         Log.d(TAG, "UPDATEZ LOCATIE");
                     }
             }

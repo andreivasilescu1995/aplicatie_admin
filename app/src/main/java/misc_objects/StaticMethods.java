@@ -22,7 +22,7 @@ public class StaticMethods {
         } else if (error instanceof NoConnectionError) {
             message = "Cannot connect to Internet... Please check your connection!";
         } else if (error instanceof TimeoutError) {
-            message = "Connection timed out... Please check your internet connection!";
+            message = "Connection timed out... Please check server connection!";
         }
         return message;
     }
