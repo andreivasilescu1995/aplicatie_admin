@@ -2,6 +2,7 @@ package device_options_activity;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -107,10 +108,11 @@ public class LogFragment extends Fragment {
                 if (getView() != null)
                     Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
 
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                if (fragmentManager != null) {
-                    ErrorFragment errorFragment = ErrorFragment.newInstance("Eroare preluare log device", message);
-                    errorFragment.show(fragmentManager, "fragment_error");
+                try {
+                    StaticMethods.getErrorFragment("Eroare preluare log device", message).show(getActivity().getSupportFragmentManager(), "fragment_error");
+                } catch (NullPointerException ex) {
+                    Log.e(TAG, ex.getMessage());
+                    ex.printStackTrace();
                 }
             }
         });

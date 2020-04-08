@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -134,10 +135,11 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
                                 if (getView() != null)
                                     Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
 
-                                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                                if (fragmentManager != null) {
-                                    ErrorFragment errorFragment = ErrorFragment.newInstance("Eroare preluare locatie device", message);
-                                    errorFragment.show(fragmentManager, "fragment_error");
+                                try {
+                                    StaticMethods.getErrorFragment("Eroare localizare device", message).show(getActivity().getSupportFragmentManager(), "fragment_error");
+                                } catch (NullPointerException ex) {
+                                    Log.e(TAG, ex.getMessage());
+                                    ex.printStackTrace();
                                 }
                             }
                         });

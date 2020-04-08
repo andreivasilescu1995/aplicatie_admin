@@ -3,6 +3,7 @@ package main_activity;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
@@ -112,13 +113,15 @@ public class LoginFragment extends Fragment {
                         if (getView() != null)
                             Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
 
-                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                        if (fragmentManager != null) {
-                            ErrorFragment errorFragment = ErrorFragment.newInstance("Eroare login", message);
-                            errorFragment.show(fragmentManager, "fragment_error");
+                        try {
+                            StaticMethods.getErrorFragment("Eroare login", message).show(getActivity().getSupportFragmentManager(), "fragment_error");
+                        } catch (NullPointerException ex) {
+                            Log.e(TAG, ex.getMessage());
+                            ex.printStackTrace();
                         }
                     }
                 });
+                request.setTag("LoginFragment");
                 request.setRetryPolicy(new DefaultRetryPolicy(1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
                 RequestQueueSingleton.getInstance(getContext()).addToRequestQueue(request);
             }

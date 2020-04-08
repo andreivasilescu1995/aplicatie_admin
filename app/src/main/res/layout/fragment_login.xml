@@ -6,8 +6,6 @@
     android:layout_height="match_parent"
     tools:context="main_activity.LoginFragment">
 
-
-
     <EditText
         android:id="@+id/textbox_username"
         android:layout_width="124dp"
@@ -19,12 +17,14 @@
         android:layout_marginBottom="48dp"
         android:inputType="textPersonName"
         android:text="test"
+        android:textSize="14dp"
         android:imeOptions="actionDone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/label_username"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.402" />
+        app:layout_constraintVertical_bias="0.402"
+        android:gravity="center_horizontal" />
 
     <Button
         android:id="@+id/btn_login"
@@ -32,6 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="161dp"
         android:layout_marginLeft="161dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="162dp"
         android:layout_marginRight="162dp"
         android:layout_marginBottom="200dp"
@@ -86,6 +87,8 @@
         android:layout_marginRight="88dp"
         android:inputType="textPassword"
         android:text="1234"
+        android:textSize="14dp"
+        android:gravity="center_horizontal"
         android:imeOptions="actionDone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -116,15 +119,15 @@
         android:layout_height="39dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="42dp"
         android:layout_marginEnd="81dp"
         android:layout_marginRight="81dp"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="60dp"
         android:ems="10"
 
+        android:gravity="center_horizontal"
         android:inputType="textPersonName"
         android:text="192.168.0.108"
-        android:textSize="16dp"
+        android:textSize="14dp"
         app:layout_constraintBottom_toTopOf="@+id/btn_login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/label_server_ip"

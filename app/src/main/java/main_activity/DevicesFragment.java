@@ -134,10 +134,11 @@ public class DevicesFragment extends Fragment {
                     Snackbar.make(getView(), StaticMethods.volleyError(error), Snackbar.LENGTH_SHORT).show();
                 updateDevicesList();
 
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                if (fragmentManager != null) {
-                    ErrorFragment errorFragment = ErrorFragment.newInstance("Erare preluare device-uri", message);
-                    errorFragment.show(fragmentManager, "fragment_error");
+                try {
+                    StaticMethods.getErrorFragment("Eroare preluare device-uri", message).show(getActivity().getSupportFragmentManager(), "fragment_error");
+                } catch (NullPointerException ex) {
+                    Log.e(TAG, ex.getMessage());
+                    ex.printStackTrace();
                 }
             }
         });
