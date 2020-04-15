@@ -1,7 +1,6 @@
-package device_options_activity;
+package aplicatie.admin.ui.device_options;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -10,10 +9,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.VolleyError;
@@ -30,18 +27,16 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONObject;
 
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import aplicatie.admin.ErrorFragment;
-import main_activity.MainActivity;
-import misc_objects.CallbackResponse;
-import misc_objects.Device;
-import misc_objects.JsonRequest;
+import aplicatie.admin.DeviceOptionsActivity;
 import aplicatie.admin.R;
-import misc_objects.RequestQueueSingleton;
-import misc_objects.StaticMethods;
+import aplicatie.admin.misc_objects.CallbackResponse;
+import aplicatie.admin.misc_objects.Device;
+import aplicatie.admin.misc_objects.JsonRequest;
+import aplicatie.admin.misc_objects.RequestQueueSingleton;
+import aplicatie.admin.misc_objects.StaticMethods;
 
 public class LocationFragment extends Fragment implements OnMapReadyCallback {
     private static final String ARG_PARAM1 = "param1";
@@ -109,7 +104,7 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
 
             @Override
             public void run() {
-                JsonObjectRequest request = JsonRequest.send_request(null, "http://" + d.getIp() + "/location", new CallbackResponse() {
+                JsonObjectRequest request = JsonRequest.send_request(null, "http://" + d.getIp() + "/backend/location", new CallbackResponse() {
                     @Override
                     public void handleResponse(Object response) {
                         map_normal.setChecked(true);
@@ -134,7 +129,6 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
                         Log.d(TAG, error.toString());
                         if (getView() != null)
                             Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
-
                         try {
                             StaticMethods.getErrorFragment("Eroare localizare device", message).show(getActivity().getSupportFragmentManager(), "fragment_error");
                         } catch (NullPointerException ex) {

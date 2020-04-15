@@ -1,23 +1,13 @@
-package main_activity;
+package aplicatie.admin.ui.devices_fragment;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.TextView;
 
-import androidx.annotation.IntDef;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,15 +24,13 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import aplicatie.admin.ErrorFragment;
 import aplicatie.admin.R;
-import device_options_activity.DeviceOptionsFragment;
-import device_options_activity.LocationFragment;
-import misc_objects.CallbackResponse;
-import misc_objects.Device;
-import misc_objects.JsonRequest;
-import misc_objects.RequestQueueSingleton;
-import misc_objects.StaticMethods;
+import aplicatie.admin.misc_objects.CallbackResponse;
+import aplicatie.admin.misc_objects.Constants;
+import aplicatie.admin.misc_objects.Device;
+import aplicatie.admin.misc_objects.JsonRequest;
+import aplicatie.admin.misc_objects.RequestQueueSingleton;
+import aplicatie.admin.misc_objects.StaticMethods;
 
 public class DevicesFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
@@ -51,8 +39,7 @@ public class DevicesFragment extends Fragment {
     private final String TAG = DevicesFragment.class.getName();
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeContainer;
-    private Toolbar toolbar;
-    private ArrayList<Device> devices = new ArrayList<>();;
+    private ArrayList<Device> devices = new ArrayList<>();
     private DeviceAdapter adapter;
 
     private String mParam1;
@@ -112,7 +99,7 @@ public class DevicesFragment extends Fragment {
     }
 
     private void getDevicesFromServer() {
-        JsonObjectRequest request = JsonRequest.send_request(null, LoginFragment.server_ip + "/get_online_devices", new CallbackResponse() {
+        JsonObjectRequest request = JsonRequest.send_request(null, Constants.server_ip + "/get_online_devices", new CallbackResponse() {
             @Override
             public void handleResponse(Object response) {
                 JSONObject jo = (JSONObject) response;

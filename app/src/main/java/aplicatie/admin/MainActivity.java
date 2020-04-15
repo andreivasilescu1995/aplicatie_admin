@@ -1,4 +1,4 @@
-package main_activity;
+package aplicatie.admin;
 
 import android.os.Bundle;
 
@@ -11,7 +11,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import aplicatie.admin.R;
+import aplicatie.admin.ui.AboutFragment;
 
 public class MainActivity extends AppCompatActivity {
 

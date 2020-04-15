@@ -1,43 +1,34 @@
-package device_options_activity;
+package aplicatie.admin.ui.device_options;
 
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.snackbar.Snackbar;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
-import aplicatie.admin.ErrorFragment;
-import main_activity.MainActivity;
-import misc_objects.CallbackResponse;
-import misc_objects.JsonRequest;
+import aplicatie.admin.DeviceOptionsActivity;
 import aplicatie.admin.R;
-import misc_objects.RequestQueueSingleton;
-import misc_objects.StaticMethods;
+import aplicatie.admin.misc_objects.CallbackResponse;
+import aplicatie.admin.misc_objects.JsonRequest;
+import aplicatie.admin.misc_objects.RequestQueueSingleton;
+import aplicatie.admin.misc_objects.StaticMethods;
 
 public class DeviceOptionsFragment extends Fragment {
 

@@ -1,11 +1,9 @@
-package device_options_activity;
+package aplicatie.admin.ui.device_options;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
@@ -15,22 +13,20 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import aplicatie.admin.ErrorFragment;
-import misc_objects.CallbackResponse;
-import misc_objects.JsonRequest;
+import aplicatie.admin.DeviceOptionsActivity;
 import aplicatie.admin.R;
-import misc_objects.RequestQueueSingleton;
-import misc_objects.StaticMethods;
+import aplicatie.admin.misc_objects.CallbackResponse;
+import aplicatie.admin.misc_objects.JsonRequest;
+import aplicatie.admin.misc_objects.RequestQueueSingleton;
+import aplicatie.admin.misc_objects.StaticMethods;
 
 public class LogFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";

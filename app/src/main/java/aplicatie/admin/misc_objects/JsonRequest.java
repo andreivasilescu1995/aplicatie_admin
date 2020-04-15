@@ -1,4 +1,4 @@
-package misc_objects;
+package aplicatie.admin.misc_objects;
 
 import com.android.volley.Request;
 import com.android.volley.Response;

@@ -1,4 +1,4 @@
-package main_activity;
+package aplicatie.admin.ui.devices_fragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,18 +13,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-import misc_objects.Device;
-import device_options_activity.DeviceOptionsActivity;
+import aplicatie.admin.misc_objects.Device;
+import aplicatie.admin.DeviceOptionsActivity;
 import aplicatie.admin.R;
 
 class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceAdapterViewHolder> {
     private final String TAG = DeviceAdapter.class.getName();
     private ArrayList<Device> devices = new ArrayList<>();
     private Context context;
-
-    public DeviceAdapter() {
-
-    }
 
     public DeviceAdapter(Context context, ArrayList<Device> devices) {
         this.context = context;

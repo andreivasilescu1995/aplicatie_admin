@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/fragment_login"
-        android:name="main_activity.LoginFragment"
+        android:name="aplicatie.admin.ui.login.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" >
         <action
@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/fragment_devices"
-        android:name="main_activity.DevicesFragment"
+        android:name="aplicatie.admin.ui.devices_fragment.DevicesFragment"
         android:label="DevicesListFragment"
         tools:layout="@layout/fragment_devices">
         <action
@@ -35,12 +35,12 @@
     <fragment
         app:popUpTo="@id/nav_graph"
         android:id="@+id/blankFragment"
-        android:name="aplicatie.admin.ErrorFragment"
+        android:name="aplicatie.admin.ui.ErrorFragment"
         android:label="fragment_blank"
         tools:layout="@layout/fragment_blank" />
     <activity
         android:id="@+id/deviceOptionsActivity"
-        android:name="device_options_activity.DeviceOptionsActivity"
+        android:name="aplicatie.admin.ui.device_activity.DeviceOptionsActivity"
         android:label="activity_device_options"
         tools:layout="@layout/activity_device_options" />
 

@@ -1,17 +1,18 @@
-package aplicatie.admin;
+package aplicatie.admin.ui;
 
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.TextView;
+
+import aplicatie.admin.R;
 
 public class ErrorFragment extends DialogFragment {
     private static final String ARG_PARAM1 = "param1";

@@ -1,10 +1,4 @@
-package misc_objects;
-
-import android.app.Activity;
-import android.content.Context;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
+package aplicatie.admin.misc_objects;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkError;
@@ -14,7 +8,7 @@ import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 
-import aplicatie.admin.ErrorFragment;
+import aplicatie.admin.ui.ErrorFragment;
 
 public class StaticMethods {
     public static String volleyError(VolleyError error) {
@@ -37,6 +31,5 @@ public class StaticMethods {
 
     public static ErrorFragment getErrorFragment(String title, String message) {
         return ErrorFragment.newInstance(title, message);
-
     }
 }

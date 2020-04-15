@@ -1,25 +1,15 @@
-package device_options_activity;
+package aplicatie.admin;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.CheckBox;
 
 import com.google.android.material.tabs.TabLayout;
 
-import java.util.List;
-
-import misc_objects.Device;
-import aplicatie.admin.R;
+import aplicatie.admin.ui.device_options.SectionsPagerAdapter;
+import aplicatie.admin.misc_objects.Device;
 
 public class DeviceOptionsActivity extends AppCompatActivity {
     private final String TAG = DeviceOptionsActivity.class.getName();

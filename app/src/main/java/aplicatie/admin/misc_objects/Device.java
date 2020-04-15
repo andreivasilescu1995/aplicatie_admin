@@ -1,4 +1,4 @@
-package misc_objects;
+package aplicatie.admin.misc_objects;
 
 import java.io.Serializable;
 

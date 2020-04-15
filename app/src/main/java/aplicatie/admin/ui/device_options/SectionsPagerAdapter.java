@@ -1,4 +1,4 @@
-package device_options_activity;
+package aplicatie.admin.ui.device_options;
 
 import android.content.Context;
 

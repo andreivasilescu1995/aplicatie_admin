@@ -1,13 +1,11 @@
-package main_activity;
+package aplicatie.admin.ui.login;
 
 import android.os.Build;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.util.Log;
@@ -29,12 +27,12 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import aplicatie.admin.ErrorFragment;
 import aplicatie.admin.R;
-import misc_objects.CallbackResponse;
-import misc_objects.JsonRequest;
-import misc_objects.RequestQueueSingleton;
-import misc_objects.StaticMethods;
+import aplicatie.admin.misc_objects.CallbackResponse;
+import aplicatie.admin.misc_objects.Constants;
+import aplicatie.admin.misc_objects.JsonRequest;
+import aplicatie.admin.misc_objects.RequestQueueSingleton;
+import aplicatie.admin.misc_objects.StaticMethods;
 
 public class LoginFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
@@ -100,7 +98,7 @@ public class LoginFragment extends Fragment {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                com.android.volley.toolbox.JsonRequest request = JsonRequest.send_request(jo, LoginFragment.server_ip + "/login", new CallbackResponse() {
+                com.android.volley.toolbox.JsonRequest request = JsonRequest.send_request(jo, Constants.server_ip + "/login", new CallbackResponse() {
                     @Override
                     public void handleResponse(Object response) {
                         NavHostFragment.findNavController(LoginFragment.this).navigate(R.id.action_loginFragment_to_fragment_devices);

@@ -1,4 +1,4 @@
-package main_activity;
+package aplicatie.admin.ui;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
