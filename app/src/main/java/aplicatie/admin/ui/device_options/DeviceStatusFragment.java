@@ -14,8 +14,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONObject;
@@ -29,22 +32,23 @@ import aplicatie.admin.misc_objects.CallbackResponse;
 import aplicatie.admin.misc_objects.JsonRequest;
 import aplicatie.admin.misc_objects.RequestQueueSingleton;
 import aplicatie.admin.misc_objects.StaticMethods;
+import aplicatie.admin.ui.ErrorFragment;
 
-public class DeviceOptionsFragment extends Fragment {
+public class DeviceStatusFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    private final String TAG = DeviceOptionsFragment.class.getName();
+    private final String TAG = DeviceStatusFragment.class.getName();
     public static Timer timer_status;
 
     private String mParam1;
     private String mParam2;
 
-    public DeviceOptionsFragment() {}
+    public DeviceStatusFragment() {}
 
-    public static DeviceOptionsFragment newInstance(String param1, String param2) {
-        DeviceOptionsFragment fragment = new DeviceOptionsFragment();
+    public static DeviceStatusFragment newInstance(String param1, String param2) {
+        DeviceStatusFragment fragment = new DeviceStatusFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -102,21 +106,24 @@ public class DeviceOptionsFragment extends Fragment {
     }
 
     private void start() {
-        JsonObjectRequest request = JsonRequest.send_request(null, "http://" + DeviceOptionsActivity.getSelectedDevice().getIp() + "/start", new CallbackResponse() {
+        StringRequest request = new StringRequest(Request.Method.POST, "http://" + DeviceOptionsActivity.getSelectedDevice().getIp() + "/start", new Response.Listener<String>() {
             @Override
-            public void handleResponse(Object response) {
-                Toast.makeText(getContext(), "Succes", Toast.LENGTH_SHORT).show();
-                set_status(true);
+            public void onResponse(String response) {
+                if (response.equals("succes")) {
+                    Toast.makeText(getContext(), "Succes", Toast.LENGTH_SHORT).show();
+                    set_status(false);
+                }
             }
+        }, new Response.ErrorListener() {
             @Override
-            public void handleError(VolleyError error) {
+            public void onErrorResponse(VolleyError error) {
                 String message = StaticMethods.volleyError(error);
                 Log.e(TAG, message);
                 if (getView() != null)
                     Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
 
                 try {
-                    StaticMethods.getErrorFragment("Eroare start device", message).show(getActivity().getSupportFragmentManager(), "fragment_error");
+                    StaticMethods.getErrorFragment("Eroare eroare stop device", message).show(getActivity().getSupportFragmentManager(), "fragment_error");
                 } catch (NullPointerException ex) {
                     Log.e(TAG, ex.getMessage());
                     ex.printStackTrace();
@@ -129,14 +136,17 @@ public class DeviceOptionsFragment extends Fragment {
     }
 
     private void stop() {
-        JsonObjectRequest request = JsonRequest.send_request(null, "http://" + DeviceOptionsActivity.getSelectedDevice().getIp() + "/stop", new CallbackResponse() {
+        StringRequest request = new StringRequest(Request.Method.POST, "http://" + DeviceOptionsActivity.getSelectedDevice().getIp() + "/stop", new Response.Listener<String>() {
             @Override
-            public void handleResponse(Object response) {
-                Toast.makeText(getContext(), "Succes", Toast.LENGTH_SHORT).show();
-                set_status(false);
+            public void onResponse(String response) {
+                if (response.equals("succes")) {
+                    Toast.makeText(getContext(), "Succes", Toast.LENGTH_SHORT).show();
+                    set_status(false);
+                }
             }
+        }, new Response.ErrorListener() {
             @Override
-            public void handleError(VolleyError error) {
+            public void onErrorResponse(VolleyError error) {
                 String message = StaticMethods.volleyError(error);
                 Log.e(TAG, message);
                 if (getView() != null)
@@ -160,36 +170,29 @@ public class DeviceOptionsFragment extends Fragment {
         timer_status.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                JsonObjectRequest request = JsonRequest.send_request(null, "http://" + DeviceOptionsActivity.getSelectedDevice().getIp() + "/status", new CallbackResponse() {
+                StringRequest request = new StringRequest(Request.Method.POST, "http://" + DeviceOptionsActivity.getSelectedDevice().getIp() + "/status", new Response.Listener<String>() {
                     @Override
-                    public void handleResponse(Object response) {
-                        JSONObject jo = (JSONObject) response;
-                        if (jo.optString("status").equals("on")) {
+                    public void onResponse(String response) {
+                        if (response.equals("on"))
                             set_status(true);
-                        } else {
+                        else
                             set_status(false);
-                        }
                     }
+                }, new Response.ErrorListener() {
                     @Override
-                    public void handleError(VolleyError error) {
+                    public void onErrorResponse(VolleyError error) {
                         timer_status.cancel();
                         String message = StaticMethods.volleyError(error);
                         Log.e(TAG, message);
                         if (getView() != null && this != null)
                             Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
-
-                        try {
+                        if (getActivity() != null)
                             StaticMethods.getErrorFragment("Eroare preluare status", message).show(getActivity().getSupportFragmentManager(), "fragment_error");
-                        } catch (NullPointerException ex) {
-                            Log.e(TAG, ex.getMessage());
-                            ex.printStackTrace();
-                        }
                     }
                 });
                 request.setTag("DeviceOptionsFragment");
                 request.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
                 RequestQueueSingleton.getInstance(getContext()).addToRequestQueue(request);
-                Log.d(TAG, "UPDATEZ STATUS");
             }
         }, 750, 10000);
     }

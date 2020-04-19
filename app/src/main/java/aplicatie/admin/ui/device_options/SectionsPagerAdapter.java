@@ -30,7 +30,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 f = LocationFragment.newInstance("", "");
                 break;
             case 1:
-                f = DeviceOptionsFragment.newInstance("", "");
+                f = DeviceStatusFragment.newInstance("", "");
                 break;
             case 2:
                 f = LogFragment.newInstance("", "");

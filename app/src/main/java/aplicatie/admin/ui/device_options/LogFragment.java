@@ -6,6 +6,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.google.android.material.snackbar.Snackbar;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import aplicatie.admin.DeviceOptionsActivity;
 import aplicatie.admin.R;
@@ -27,6 +29,7 @@ import aplicatie.admin.misc_objects.CallbackResponse;
 import aplicatie.admin.misc_objects.JsonRequest;
 import aplicatie.admin.misc_objects.RequestQueueSingleton;
 import aplicatie.admin.misc_objects.StaticMethods;
+import aplicatie.admin.ui.ErrorFragment;
 
 public class LogFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
@@ -34,6 +37,8 @@ public class LogFragment extends Fragment {
 
     private String mParam1;
     private String mParam2;
+
+    private TextView log;
 
     private final String TAG = LogFragment.class.getName();
 
@@ -60,7 +65,10 @@ public class LogFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_log, container, false);
+        View v = inflater.inflate(R.layout.fragment_log, container, false);
+        log = v.findViewById(R.id.tv_log);
+        log.setMovementMethod(new ScrollingMovementMethod());
+        return v;
     }
 
     @Override
@@ -80,7 +88,6 @@ public class LogFragment extends Fragment {
     }
 
     private synchronized void getDeviceLog() {
-        final TextView log = getActivity().findViewById(R.id.tv_log);
         JsonObjectRequest request = JsonRequest.send_request(null, "http://" + DeviceOptionsActivity.getSelectedDevice().getIp() + "/log", new CallbackResponse() {
             @Override
             public void handleResponse(Object response) {
@@ -96,20 +103,14 @@ public class LogFragment extends Fragment {
                     e.printStackTrace();
                 }
             }
-
             @Override
             public void handleError(VolleyError error) {
                 String message = StaticMethods.volleyError(error);
                 Log.d(TAG, message);
                 if (getView() != null)
                     Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
-
-                try {
+                if (getActivity() != null)
                     StaticMethods.getErrorFragment("Eroare preluare log device", message).show(getActivity().getSupportFragmentManager(), "fragment_error");
-                } catch (NullPointerException ex) {
-                    Log.e(TAG, ex.getMessage());
-                    ex.printStackTrace();
-                }
             }
         });
         request.setTag("LogFragment");

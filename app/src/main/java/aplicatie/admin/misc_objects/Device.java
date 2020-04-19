@@ -5,13 +5,11 @@ import java.io.Serializable;
 public class Device implements Serializable {
     private String id;
     private String ip;
-    private boolean online;
     private String route;
 
-    public Device(String id, String ip, boolean online, String route) {
+    public Device(String id, String ip, String route) {
         this.id = id;
         this.ip = ip;
-        this.online = online;
         this.route = route;
     }
 
@@ -31,14 +29,6 @@ public class Device implements Serializable {
         this.ip = ip;
     }
 
-    public boolean isOnline() {
-        return online;
-    }
-
-    public void setOnline(boolean online) {
-        this.online = online;
-    }
-
     public String getRoute() {
         return route;
     }
@@ -49,6 +39,6 @@ public class Device implements Serializable {
 
     @Override
     public String toString() {
-        return this.id + " " + this.ip + " " + this.online + " " + this.route;
+        return this.id + " " + this.ip + " " + this.route;
     }
 }

@@ -16,113 +16,107 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.google.android.material.snackbar.Snackbar;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.android.volley.toolbox.StringRequest;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
 
 import aplicatie.admin.R;
-import aplicatie.admin.misc_objects.CallbackResponse;
 import aplicatie.admin.misc_objects.Constants;
-import aplicatie.admin.misc_objects.JsonRequest;
+import aplicatie.admin.ui.DelayedProgressDialog;
 import aplicatie.admin.misc_objects.RequestQueueSingleton;
 import aplicatie.admin.misc_objects.StaticMethods;
 
 public class LoginFragment extends Fragment {
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
     private static final String TAG = LoginFragment.class.getName();
-    public static String server_ip;
-
-    private String mParam1;
-    private String mParam2;
+    private TextView username;
+    private TextView password;
+    private TextView server_ip;
+    private Button login;
 
     public LoginFragment() {
-    }
-
-    public static LoginFragment newInstance(String param1, String param2) {
-        LoginFragment fragment = new LoginFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_login, container, false);
+        View v = inflater.inflate(R.layout.fragment_login, container, false);
+        username = v.findViewById(R.id.edit_username);
+        password = v.findViewById(R.id.edit_password);
+        server_ip = v.findViewById(R.id.edit_server_ip);
+        login = v.findViewById(R.id.btn_login);
+        return v;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        final TextView username = getActivity().findViewById(R.id.textbox_username);
-        final TextView password = getActivity().findViewById(R.id.textbox_password);
-        final TextView server_ip = getActivity().findViewById(R.id.tv_server_ip);
-        LoginFragment.server_ip = "http://" + server_ip.getText().toString();
+        server_ip.setText(Constants.server_ip.replace("http://", "").replace("/backend", ""));
 
         server_ip.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                LoginFragment.server_ip = "http://" + server_ip.getText().toString();
-                return true;
+            Constants.server_ip = "http://" + server_ip.getText().toString() + "/backen";
+            return true;
             }
         });
 
-        Button b = getActivity().findViewById(R.id.btn_login);
-        b.setOnClickListener(new View.OnClickListener() {
+        login.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onClick(View v) {
-                JSONObject jo = new JSONObject();
-                try {
-                    jo.put("username", username.getText());
-                    jo.put("password", hashPassword(password.getText().toString()));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                com.android.volley.toolbox.JsonRequest request = JsonRequest.send_request(jo, Constants.server_ip + "/login", new CallbackResponse() {
-                    @Override
-                    public void handleResponse(Object response) {
-                        NavHostFragment.findNavController(LoginFragment.this).navigate(R.id.action_loginFragment_to_fragment_devices);
-                    }
-                    @Override
-                    public void handleError(VolleyError error) {
-                        String message = StaticMethods.volleyError(error);
-                        Log.d(TAG, message);
-                        if (getView() != null)
-                            Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
-
-                        try {
-                            StaticMethods.getErrorFragment("Eroare login", message).show(getActivity().getSupportFragmentManager(), "fragment_error");
-                        } catch (NullPointerException ex) {
-                            Log.e(TAG, ex.getMessage());
-                            ex.printStackTrace();
-                        }
-                    }
-                });
-                request.setTag("LoginFragment");
-                request.setRetryPolicy(new DefaultRetryPolicy(1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-                RequestQueueSingleton.getInstance(getContext()).addToRequestQueue(request);
+                login();
             }
         });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private void login() {
+        final DelayedProgressDialog delayedProgressDialog = new DelayedProgressDialog();
+        delayedProgressDialog.message = "Loging in";
+        delayedProgressDialog.show(getActivity().getSupportFragmentManager(), "ProgressBar");
+
+        StringRequest request = new StringRequest(Request.Method.POST, Constants.server_ip + "/login",
+                new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    NavHostFragment.findNavController(LoginFragment.this).navigate(R.id.action_loginFragment_to_fragment_devices);
+                    delayedProgressDialog.cancel();
+                }
+            },
+            new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    String message = StaticMethods.volleyError(error);
+                    if (getActivity() != null)
+                        StaticMethods.getErrorFragment("Eroare login", message).show(getActivity().getSupportFragmentManager(), "fragment_error");
+                    Log.e(TAG, message);
+                    delayedProgressDialog.cancel();
+                }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String, String> params = new HashMap<String, String>();
+                params.put("username", username.getText().toString());
+                params.put("password", hashPassword(password.getText().toString()));
+                return params;
+            }
+        };
+        request.setTag("LoginFragment");
+        request.setRetryPolicy(new DefaultRetryPolicy(2000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        RequestQueueSingleton.getInstance(getContext()).addToRequestQueue(request);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)

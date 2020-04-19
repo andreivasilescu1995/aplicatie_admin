@@ -17,9 +17,9 @@
     <string name="action_maps_terrain">Terrain map</string>
 
     <string name="tv_no_devices">No devices online!</string>
-    <string name="label_id">ID:</string>
-    <string name="label_ip">IP:</string>
-    <string name="label_route">Route:</string>
+    <string name="label_id">ID</string>
+    <string name="label_ip">IP</string>
+    <string name="label_route">Route</string>
 
     <string name="tab_location">Location</string>
     <string name="tab_devices_list">Online devices</string>
@@ -39,6 +39,5 @@
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="progress_bar_default_message">Loading</string>
 </resources>

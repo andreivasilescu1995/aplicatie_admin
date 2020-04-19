@@ -37,6 +37,7 @@ import aplicatie.admin.misc_objects.Device;
 import aplicatie.admin.misc_objects.JsonRequest;
 import aplicatie.admin.misc_objects.RequestQueueSingleton;
 import aplicatie.admin.misc_objects.StaticMethods;
+import aplicatie.admin.ui.ErrorFragment;
 
 public class LocationFragment extends Fragment implements OnMapReadyCallback {
     private static final String ARG_PARAM1 = "param1";
@@ -104,24 +105,19 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
 
             @Override
             public void run() {
-                JsonObjectRequest request = JsonRequest.send_request(null, "http://" + d.getIp() + "/backend/location", new CallbackResponse() {
+                JsonObjectRequest request = JsonRequest.send_request(null, "http://" + d.getIp() + "/location", new CallbackResponse() {
                     @Override
                     public void handleResponse(Object response) {
                         map_normal.setChecked(true);
-
-                        JSONObject jo = (JSONObject) response;
-                        position = new LatLng(jo.optDouble("latitude"), jo.optDouble("longitude"));
+                        position = new LatLng(((JSONObject) response).optDouble("latitude"), ((JSONObject) response).optDouble("longitude"));
                         if (marker == null) {
                             marker = map.addMarker(new MarkerOptions().position(position));
-                            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(position, 16);
-                            map.animateCamera(cameraUpdate);
                         } else {
                             marker.setPosition(position);
-                            //CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(position, 16);
-                            //map.animateCamera(cameraUpdate);
                         }
+                        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(position, 16);
+                        map.animateCamera(cameraUpdate);
                     }
-
                     @Override
                     public void handleError(VolleyError error) {
                         timer_location.cancel();
@@ -129,12 +125,8 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
                         Log.d(TAG, error.toString());
                         if (getView() != null)
                             Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
-                        try {
+                        if (getActivity() != null)
                             StaticMethods.getErrorFragment("Eroare localizare device", message).show(getActivity().getSupportFragmentManager(), "fragment_error");
-                        } catch (NullPointerException ex) {
-                            Log.e(TAG, ex.getMessage());
-                            ex.printStackTrace();
-                        }
                     }
                 });
                 request.setTag("LocationFragment");

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.device_activity.LogFragment">
+    tools:context=".DeviceOptionsActivity">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -15,8 +15,7 @@
             android:id="@+id/tv_log"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="5dp"
-            android:text="@string/log_fragment" />
+            android:padding="5dp" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

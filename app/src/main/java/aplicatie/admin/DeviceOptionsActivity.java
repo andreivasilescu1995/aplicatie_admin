@@ -27,7 +27,7 @@ public class DeviceOptionsActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         selectedDevice = (Device)intent.getSerializableExtra("Device");
-        setTitle("IP:" + selectedDevice.getIp() + " Ruta:" + selectedDevice.getRoute());
+//        setTitle("IP:" + selectedDevice.getIp() + " Ruta:" + selectedDevice.getRoute());
     }
 
     public static Device getSelectedDevice() {
@@ -49,6 +49,13 @@ public class DeviceOptionsActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        getSupportActionBar().hide();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        getSupportActionBar().show();
     }
 
     @Override

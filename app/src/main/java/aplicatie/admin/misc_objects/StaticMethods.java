@@ -11,6 +11,7 @@ import com.android.volley.VolleyError;
 import aplicatie.admin.ui.ErrorFragment;
 
 public class StaticMethods {
+
     public static String volleyError(VolleyError error) {
         String message = null;
         if (error instanceof NetworkError) {
