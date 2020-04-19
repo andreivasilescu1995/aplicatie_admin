@@ -5,6 +5,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import com.google.android.material.tabs.TabLayout;
 
@@ -14,6 +15,8 @@ import aplicatie.admin.misc_objects.Device;
 public class DeviceOptionsActivity extends AppCompatActivity {
     private final String TAG = DeviceOptionsActivity.class.getName();
     private static Device selectedDevice;
+    private TextView device_ip;
+    private TextView device_route;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +30,11 @@ public class DeviceOptionsActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         selectedDevice = (Device)intent.getSerializableExtra("Device");
-//        setTitle("IP:" + selectedDevice.getIp() + " Ruta:" + selectedDevice.getRoute());
+
+        device_ip = findViewById(R.id.device_ip);
+        device_route = findViewById(R.id.device_route);
+        device_ip.setText("IP: " + selectedDevice.getIp());
+        device_route.setText("Ruta: " + selectedDevice.getRoute());
     }
 
     public static Device getSelectedDevice() {
