@@ -50,7 +50,6 @@ public class DevicesFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        devices.add(new Device("TEST DEVICE", "192.168.0.111", "TEST"));
     }
 
     @Override
@@ -83,13 +82,9 @@ public class DevicesFragment extends Fragment {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                DelayedProgressDialog pd = new DelayedProgressDialog();
-                pd.message = "Getting devices list";
-                pd.show(getActivity().getSupportFragmentManager(), "ProgressBar");
                 devices.clear();
                 getDevicesFromServer();
                 swipeContainer.setRefreshing(false);
-                pd.cancel();
             }
         });
     }
@@ -138,8 +133,7 @@ public class DevicesFragment extends Fragment {
     private void updateDevicesList() {
         adapter.notifyDataSetChanged();
         if (devices.size() == 0) {
-            no_devices_online.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.GONE);
+            devices.add(new Device("TEST DEVICE", "192.168.0.111", "TEST"));
         }
     }
 }

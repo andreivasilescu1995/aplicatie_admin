@@ -10,31 +10,32 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/rounded_corners"
-                android:layout_gravity="center_horizontal">
-
-                <TextView
-                    android:id="@+id/device_ip"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp" />
-                <TextView
-                    android:id="@+id/device_route"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="5dp"
-                    android:layout_toRightOf="@id/device_ip"/>
-            </RelativeLayout>
-
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_corners"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="7dp">
+
+            <TextView
+                android:id="@+id/device_ip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp" />
+            <TextView
+                android:id="@+id/device_route"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:layout_toRightOf="@id/device_ip"/>
+        </RelativeLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
 

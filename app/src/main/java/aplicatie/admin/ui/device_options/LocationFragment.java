@@ -1,5 +1,6 @@
 package aplicatie.admin.ui.device_options;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +14,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.maps.CameraUpdate;
@@ -20,10 +23,11 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONObject;
 
@@ -32,12 +36,10 @@ import java.util.TimerTask;
 
 import aplicatie.admin.DeviceOptionsActivity;
 import aplicatie.admin.R;
-import aplicatie.admin.misc_objects.CallbackResponse;
+import aplicatie.admin.Routes;
 import aplicatie.admin.misc_objects.Device;
-import aplicatie.admin.misc_objects.JsonRequest;
 import aplicatie.admin.misc_objects.RequestQueueSingleton;
 import aplicatie.admin.misc_objects.StaticMethods;
-import aplicatie.admin.ui.ErrorFragment;
 
 public class LocationFragment extends Fragment implements OnMapReadyCallback {
     private static final String ARG_PARAM1 = "param1";
@@ -93,8 +95,8 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(final GoogleMap googleMap) {
-        final Device d = DeviceOptionsActivity.getSelectedDevice();
-
+        final Device selectedDevice = DeviceOptionsActivity.getSelectedDevice();
+        googleMap.addPolyline(Routes.route_pline.color(Color.CYAN));
         map = googleMap;
         map_normal.setChecked(true);
 
@@ -102,29 +104,28 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
         timer_location.schedule(new TimerTask() {
             LatLng position = null;
             Marker marker = null;
-
             @Override
             public void run() {
-                JsonObjectRequest request = JsonRequest.send_request(null, "http://" + d.getIp() + "/location", new CallbackResponse() {
+                JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, "http://" + selectedDevice.getIp() + "/location", null, new Response.Listener<JSONObject>() {
                     @Override
-                    public void handleResponse(Object response) {
-                        map_normal.setChecked(true);
-                        position = new LatLng(((JSONObject) response).optDouble("latitude"), ((JSONObject) response).optDouble("longitude"));
+                    public void onResponse(JSONObject response) {
+                        position = new LatLng(response.optDouble("latitude"), response.optDouble("longitude"));
                         if (marker == null) {
-                            marker = map.addMarker(new MarkerOptions().position(position));
+                            marker = map.addMarker(new MarkerOptions()
+                                    .position(StaticMethods.findNearestPoint(position, Routes.route_points))
+                                    .icon(StaticMethods.getBitmapFromVector(getContext(), R.drawable.ic_directions_bus_black_24dp, Color.BLUE))
+                            );
+                            animateCamera(position);
                         } else {
-                            marker.setPosition(position);
+                            marker.setPosition(StaticMethods.findNearestPoint(position, Routes.route_points));
                         }
-                        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(position, 16);
-                        map.animateCamera(cameraUpdate);
+                        animateCamera(position);
                     }
+                }, new Response.ErrorListener() {
                     @Override
-                    public void handleError(VolleyError error) {
+                    public void onErrorResponse(VolleyError error) {
                         timer_location.cancel();
                         String message = StaticMethods.volleyError(error);
-                        Log.d(TAG, error.toString());
-                        if (getView() != null)
-                            Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
                         if (getActivity() != null)
                             StaticMethods.getErrorFragment("Eroare localizare device", message).show(getActivity().getSupportFragmentManager(), "fragment_error");
                     }
@@ -192,5 +193,15 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
                 break;
         }
         return true;
+    }
+
+    private void animateCamera(LatLng position) {
+        if (map.getCameraPosition() == new CameraPosition.Builder().target(position).zoom(16).build()) {
+            return;
+        }
+        else {
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(position, 16);
+            map.animateCamera(cameraUpdate);
+        }
     }
 }

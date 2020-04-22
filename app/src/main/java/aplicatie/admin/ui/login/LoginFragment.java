@@ -8,6 +8,8 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -65,14 +67,16 @@ public class LoginFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         server_ip.setText(Constants.server_ip.replace("http://", "").replace("/backend", ""));
 
-        server_ip.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        server_ip.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-            Constants.server_ip = "http://" + server_ip.getText().toString() + "/backen";
-            return true;
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Constants.server_ip = "http://" + server_ip.getText().toString() + "/backend";
             }
+            @Override
+            public void afterTextChanged(Editable s) {}
         });
-
         login.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
@@ -92,6 +96,7 @@ public class LoginFragment extends Fragment {
                 new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
+                    Log.d(TAG, "Successfully logged in to " + Constants.server_ip);
                     NavHostFragment.findNavController(LoginFragment.this).navigate(R.id.action_loginFragment_to_fragment_devices);
                     delayedProgressDialog.cancel();
                 }
@@ -102,7 +107,7 @@ public class LoginFragment extends Fragment {
                     String message = StaticMethods.volleyError(error);
                     if (getActivity() != null)
                         StaticMethods.getErrorFragment("Eroare login", message).show(getActivity().getSupportFragmentManager(), "fragment_error");
-                    Log.e(TAG, message);
+                    Log.e(TAG, message + "IP: " + Constants.server_ip + "/login");
                     delayedProgressDialog.cancel();
                 }
         }) {

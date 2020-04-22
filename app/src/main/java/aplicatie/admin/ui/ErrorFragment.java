@@ -6,7 +6,10 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,5 +61,22 @@ public class ErrorFragment extends DialogFragment {
         error_title.setText(mParam1);
         error_body.setText(mParam2);
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+    }
+
+    @Override
+    public void show(final FragmentManager fm, final String tag) {
+        if (isAdded())
+            return;
+        else {
+            Handler showHandler = new Handler();
+            showHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    FragmentTransaction ft = fm.beginTransaction();
+                    ft.add(ErrorFragment.this, tag);
+                    ft.commitAllowingStateLoss();
+                }
+            }, 0);
+        }
     }
 }
