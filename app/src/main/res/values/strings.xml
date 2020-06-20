@@ -10,7 +10,7 @@
     <string name="about_link"><a href='https://github.com/andreivasilescu1995/aplicatie_admin/tree/Android/app/src/main/java'>Github source</a></string>
     <string name="about_sign">"@Vasilescu Andrei"</string>
 
-    <string name="title_error">Error</string>
+    <string name="error">Error</string>
 
     <string name="action_maps_normal">Normal map</string>
     <string name="action_maps_satellite">Satellite map</string>
@@ -31,10 +31,11 @@
 
     <string name="btn_start">START</string>
     <string name="btn_stop">STOP</string>
-    <string name="tv_status">Status:</string>
-    <string name="status_on">ON</string>
-    <string name="status_off">OFF</string>
+    <string name="tv_status">Programul principal: </string>
+    <string name="status_on">este activ</string>
+    <string name="status_off">este inactiv</string>
     <string name="status_default">device offline</string>
+    <string name="poweroff">Poweroff</string>
     <string name="title_activity_devices_options">DevicesOptionsActivity</string>
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>

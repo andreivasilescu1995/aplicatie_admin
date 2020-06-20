@@ -9,8 +9,8 @@ import android.widget.TextView;
 
 import com.google.android.material.tabs.TabLayout;
 
-import aplicatie.admin.ui.device_options.SectionsPagerAdapter;
-import aplicatie.admin.misc_objects.Device;
+import aplicatie.admin.controllers.device_options.SectionsPagerAdapter;
+import aplicatie.admin.models.Device;
 
 public class DeviceOptionsActivity extends AppCompatActivity {
     private final String TAG = DeviceOptionsActivity.class.getName();

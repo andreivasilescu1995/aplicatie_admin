@@ -1,4 +1,4 @@
-package aplicatie.admin.ui;
+package aplicatie.admin.controllers;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;

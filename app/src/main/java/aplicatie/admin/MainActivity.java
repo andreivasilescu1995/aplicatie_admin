@@ -4,14 +4,12 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.FragmentManager;
 
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import aplicatie.admin.ui.AboutFragment;
+import aplicatie.admin.controllers.AboutFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,9 +30,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_about:
-                FragmentManager fm = getSupportFragmentManager();
-                AboutFragment aboutFragment = AboutFragment.newInstance();
-                aboutFragment.show(fm, "fragment_about");
+                AboutFragment aboutFragment = new AboutFragment();
+                aboutFragment.show(getSupportFragmentManager(), "fragment_about");
                 break;
             default: break;
         }

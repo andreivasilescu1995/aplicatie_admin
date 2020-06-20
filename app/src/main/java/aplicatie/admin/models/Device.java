@@ -1,4 +1,4 @@
-package aplicatie.admin.misc_objects;
+package aplicatie.admin.models;
 
 import java.io.Serializable;
 

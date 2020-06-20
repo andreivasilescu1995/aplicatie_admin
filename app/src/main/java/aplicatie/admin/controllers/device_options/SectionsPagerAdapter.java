@@ -1,4 +1,4 @@
-package aplicatie.admin.ui.device_options;
+package aplicatie.admin.controllers.device_options;
 
 import android.content.Context;
 
@@ -27,13 +27,13 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         Fragment f = null;
         switch (position) {
             case 0:
-                f = LocationFragment.newInstance("", "");
+                f = new LocationFragment();
                 break;
             case 1:
-                f = DeviceStatusFragment.newInstance("", "");
+                f = new DeviceStatusFragment();
                 break;
             case 2:
-                f = LogFragment.newInstance("", "");
+                f = new LogFragment();
                 break;
         }
         return f;

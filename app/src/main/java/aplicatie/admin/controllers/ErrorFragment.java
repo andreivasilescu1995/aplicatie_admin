@@ -1,6 +1,5 @@
-package aplicatie.admin.ui;
+package aplicatie.admin.controllers;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,15 +9,12 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import aplicatie.admin.R;
-import aplicatie.admin.misc_objects.StaticMethods;
 
 public class ErrorFragment extends DialogFragment {
     private static final String ARG_PARAM1 = "param1";
@@ -57,10 +53,9 @@ public class ErrorFragment extends DialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         TextView error_title = view.findViewById(R.id.title_error);
-        TextView error_body = view.findViewById(R.id.tv_error);
+        TextView error_body = view.findViewById(R.id.message_error);
         error_title.setText(mParam1);
         error_body.setText(mParam2);
-        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 
     @Override

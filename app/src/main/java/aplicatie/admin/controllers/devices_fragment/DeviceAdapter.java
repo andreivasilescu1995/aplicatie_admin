@@ -1,4 +1,4 @@
-package aplicatie.admin.ui.devices_fragment;
+package aplicatie.admin.controllers.devices_fragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-import aplicatie.admin.misc_objects.Device;
+import aplicatie.admin.models.Device;
 import aplicatie.admin.DeviceOptionsActivity;
 import aplicatie.admin.R;
 
@@ -22,9 +22,8 @@ class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceAdapterView
     private ArrayList<Device> devices = new ArrayList<>();
     private Context context;
 
-    public DeviceAdapter(Context context, ArrayList<Device> devices) {
+    public DeviceAdapter(Context context) {
         this.context = context;
-        this.devices = devices;
     }
 
     @NonNull
@@ -55,6 +54,15 @@ class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceAdapterView
         return devices.size();
     }
 
+    public ArrayList<Device> getDevices() {
+        return devices;
+    }
+
+    public void setDevices(ArrayList<Device> devices) {
+        this.devices = devices;
+    }
+
+
     public class DeviceAdapterViewHolder extends RecyclerView.ViewHolder {
         TextView value_id;
         TextView value_ip;
@@ -68,14 +76,6 @@ class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceAdapterView
             value_route = itemView.findViewById(R.id.value_route);
             device_options = itemView.findViewById(R.id.device_options);
         }
-    }
-
-    public void setDevices(ArrayList<Device> devices) {
-        this.devices = devices;
-    }
-
-    public void setContext(Context context) {
-        this.context = context;
     }
 }
 

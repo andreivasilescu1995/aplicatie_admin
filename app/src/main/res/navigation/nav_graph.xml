@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/fragment_login"
-        android:name="aplicatie.admin.ui.login.LoginFragment"
+        android:name="aplicatie.admin.controllers.login.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" >
         <action
@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/fragment_devices"
-        android:name="aplicatie.admin.ui.devices_fragment.DevicesFragment"
+        android:name="aplicatie.admin.controllers.devices_fragment.DevicesListFragment"
         android:label="DevicesListFragment"
         tools:layout="@layout/fragment_devices">
         <action
